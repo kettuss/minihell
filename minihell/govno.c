@@ -1,2 +1,0 @@
-ijogrjhrheohpurehgrorgijoegerijgerijgrkjrnkleerjnojof
-tyt govno ksta
