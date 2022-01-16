@@ -19,6 +19,8 @@ typedef struct s_cmd
 	struct s_cmd *back;
 }t_cmd;
 
+
+int pipes(t_cmd *lst, char **env);
 /*
 1)cmd[0] = "/bin/cat"
 2)cmd[1] = "-e"

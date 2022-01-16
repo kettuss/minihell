@@ -12,47 +12,6 @@ void voi (void)
 	return ;
 }
 
-void pipes(char **env)
-{
-	char *huita[3] = {"/bin/cat", "-e", NULL};
-	char *wcl[3] = {"/usr/bin/wc", "-l", NULL};
-	int fd[2];
-	pid_t pid;
-
-	pipe(fd);
-	pid = fork();
-	if (!pid)
-	{
-		dup2(fd[1], 1);
-		close(fd[1]);
-		close(fd[0]);
-		execve(huita[0], huita, env);
-	}
-	else
-	{
-		close(fd[1]);
-	}
-	pid = fork();
-	if (!pid)
-	{
-		dup2(fd[0], 0);
-		close(fd[0]);
-		execve(wcl[0], wcl, env);
-	}
-	else
-	{
-		close(fd[0]);
-	}
-	int i = 0;
-	while (i < 2)
-	{
-		wait(0);
-		i++;
-	}
-
-}
-
-
 t_cmd *lst_init(char **list)
 {
 	t_cmd *element;
@@ -79,26 +38,28 @@ void lst_add(t_cmd **cmd, t_cmd *element)
 
 void exec(t_cmd **cmd, char **env)
 {
-	t_cmd *tmp;
-	pid_t pid;
+	// t_cmd *tmp;
+	// pid_t pid;
 
 	while ((*cmd)->back)
 		*cmd = (*cmd)->back;
-	tmp = *cmd;
-	pid = fork();
-	if(!pid)
-	{
-		if (execve(tmp->cmd[0], tmp->cmd, env) == -1)
-		{
-			write(2, strerror(errno), ft_strlen(strerror(errno)));
-			write(2, ": ", 2);
-			write(2, tmp->cmd[0], ft_strlen(tmp->cmd[0]));
-			write(2, "\n", 1);
-			exit(1);
-		}
-	}
-	else 
-		wait(0);
+	pipes(*cmd, env);
+	return ;
+	// tmp = *cmd;
+	// pid = fork();
+	// if(!pid)
+	// {
+	// 	if (execve(tmp->cmd[0], tmp->cmd, env) == -1)
+	// 	{
+	// 		write(2, strerror(errno), ft_strlen(strerror(errno)));
+	// 		write(2, ": ", 2);
+	// 		write(2, tmp->cmd[0], ft_strlen(tmp->cmd[0]));
+	// 		write(2, "\n", 1);
+	// 		exit(1);
+	// 	}
+	// }
+	// else 
+	// 	wait(0);
 }
 
 char *get_path_commd(char *cmd, char *path)
