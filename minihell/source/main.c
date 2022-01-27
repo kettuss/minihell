@@ -82,36 +82,36 @@ char *get_path_commd(char *cmd, char *path)
 	return (cmd);
 }
 
-int main (int argc, char **argv, char **env)
-{
-	(void)argc;
-	(void)argv;
-	char *str;
-	t_cmd *cmd;
-	char **arguments;
+// int main (int argc, char **argv, char **env)
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	char *str;
+// 	t_cmd *cmd;
+// 	char **arguments;
 
-	cmd = NULL;
-	// char *from_D[5] = {"/usr/bin/say", "-v", "Milena", "чь", NULL};
-	// char *from_D[3] = {"/usr/bin/say", "ту ту ту", NULL};
+// 	cmd = NULL;
+// 	// char *from_D[5] = {"/usr/bin/say", "-v", "Milena", "чь", NULL};
+// 	// char *from_D[3] = {"/usr/bin/say", "ту ту ту", NULL};
 
-	// pipes(env);
-	// return (0);
-	while (1)
-	{
-		str = readline("AAAA БЛЯ ГДЕ Я?:>");
-		if (!str || !ft_strncmp(str, "exit", 5))
-			exit(0);
-		if (!*str)
-			continue ;
-		if (str)
-			add_history(str);
-		arguments = ft_split(str, ' ');
-		arguments[0] = get_path_commd(arguments[0], getenv("PATH"));
-		lst_add(&cmd, lst_init(arguments));
-		exec(&cmd, env);
-		cmd = NULL;
+// 	// pipes(env);
+// 	// return (0);
+// 	while (1)
+// 	{
+// 		str = readline("AAA БЛЯ ГДЕ Я?");
+// 		if (!str || !ft_strncmp(str, "exit", 5))
+// 			exit(0);
+// 		if (!*str)
+// 			continue ;
+// 		if (str)
+// 			add_history(str);
+// 		arguments = ft_split(str, ' ');
+// 		arguments[0] = get_path_commd(arguments[0], getenv("PATH"));
+// 		lst_add(&cmd, lst_init(arguments));
+// 		exec(&cmd, env);
+// 		cmd = NULL;
 
-	}
-	free(str);
-	return (0);
-}
+// 	}
+// 	free(str);
+// 	return (0);
+// }

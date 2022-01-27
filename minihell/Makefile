@@ -1,32 +1,41 @@
-NAME = minihell
+NAME		=	minishell
 
-HEADER = -I /include/minishell.h
+SRCS_FILES	= 	${shell find ./source -name "*.c"}
 
-SRC = ${shell find ./source -name "*.c"}
+SRCS_FOLDER	=	source/
 
-LIBFT = ../libft/libft.a
+SRCS		= 	$(SRCS_FILES)
+OBJS		=	$(patsubst %.c,%.o,$(SRCS))
 
-FLAGS = -Wall -Wextra -Werror -g
+READLINE = -L/Users/$(USER)/.brew/Cellar/readline/8.1.2/lib/ -lreadline
 
-READLINE = -L/Users/$(USER)/.brew/Cellar/readline/8.1.1/include/readline -lreadline
+INCLUDE		=	-I./include -I./../libft/
 
-OBJ = ${SRC:.c=.o}
+CC			=	gcc
+CFLAGS		=	-Wall -Wextra -Werror -g
+RM			=	rm -f
 
-all : ${NAME}
+LIB = ../libft/libft.a
 
-%.o : %.c $(HEADER)
-	gcc ${FLAGS} -c $< -o $@
+.PHONY:		all clean fclean re bonus
 
-${NAME} : ${SRC} ${OBJ}
-	$(MAKE) -C ../libft
-	gcc ${FLAGS} ${HEADER} ${SRC} ${READLINE} $(LIBFT) -o ${NAME}
+all:		$(NAME)
 
-clean :
-	$(RM) $(OBJ)
+%.o:		%.c
+			$(CC) $(CFLAGS) $(INCLUDE) -c -g $< -o $@ 
+$(NAME):	$(OBJS)
+			$(MAKE) -C $(dir $(LIB))
+			$(CC) $(INCLUDE) $(LIB) ${READLINE} -o $(NAME) $(OBJS)
 
-fclean : clean
-	$(RM) $(NAME)
+clean:
+			$(RM) $(OBJS)
+			@make -C $(dir $(LIB)) clean
 
-re : fclean all
+fclean:		clean
+			@make -C $(dir $(LIB)) fclean
+			$(RM) $(NAME)
 
-.PHONY : all clean fclean re
+re:			fclean all
+
+norm:
+	norminette
