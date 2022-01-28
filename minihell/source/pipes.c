@@ -7,13 +7,30 @@ int land_list(t_cmd *str)
 	
 	i = 0;
 	while(str)
-	{	
+	{
 		str = str->next;
 		i++;
 	}
 	return(i);
 }
 
+int check_stdout(t_cmd *cmd)
+{
+	if (cmd->fd_out == -1)
+		return (1);
+	dup2(cmd->fd_out, 1);
+	close(cmd->fd_out);
+	return (0);
+}
+
+int check_stdin(t_cmd *cmd)
+{
+	if (cmd->fd_in == -1)
+		return (1);
+	dup2(cmd->fd_in, 0);
+	close(cmd->fd_in);
+	return (0);
+}
 
 int pipes(t_cmd *lst, char **env)
 {
@@ -40,10 +57,15 @@ int pipes(t_cmd *lst, char **env)
 		if(!pid)
 		{
 			if (!lst->back && !lst->next)
-				;
+			{
+				check_stdin(lst);
+				check_stdout(lst);
+			}
 			else if(!lst->back)
 			{
-				dup2(p_a[1], 1);
+				check_stdin(lst);
+				if (check_stdout(lst))
+					dup2(p_a[1], 1);
 				close(p_a[0]);
 				close(p_a[1]);
 			}
@@ -51,16 +73,20 @@ int pipes(t_cmd *lst, char **env)
 			{
 				if(!flag)
 				{
-					dup2(p_a[1], 1);
-					dup2(p_b[0], 0);
+					if (check_stdout(lst))
+						dup2(p_a[1], 1);
+					if (check_stdin(lst))
+						dup2(p_b[0], 0);
 					close(p_a[0]);
 					close(p_a[1]);
 					close(p_b[0]);
 				}
 				else
 				{
-					dup2(p_b[1], 1);
-					dup2(p_a[0], 0);
+					if (check_stdout(lst))
+						dup2(p_b[1], 1);
+					if (check_stdin(lst))
+						dup2(p_a[0], 0);
 					close(p_a[0]);
 					close(p_b[1]);
 					close(p_b[0]);
@@ -70,12 +96,16 @@ int pipes(t_cmd *lst, char **env)
 			{
 				if(!flag)
 				{
-					dup2(p_b[0], 0);
+					check_stdout(lst);
+					if (check_stdin(lst))
+						dup2(p_b[0], 0);
 					close(p_b[0]);
 				}
 				else
 				{
-					dup2(p_a[0], 0);
+					check_stdout(lst);
+					if (check_stdin(lst))
+						dup2(p_a[0], 0);
 					close(p_a[0]);
 				}
 			}
@@ -90,6 +120,10 @@ int pipes(t_cmd *lst, char **env)
 		}
 		else
 		{
+			if (lst->fd_in != -1)
+				close(lst->fd_in);
+			if (lst->fd_out != -1)
+				close(lst->fd_out);
 			if (!lst->next && !lst->back)
 				;
 			else if(!lst->back)

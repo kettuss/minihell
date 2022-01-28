@@ -25,7 +25,7 @@ all:		$(NAME)
 			$(CC) $(CFLAGS) $(INCLUDE) -c -g $< -o $@ 
 $(NAME):	$(OBJS)
 			$(MAKE) -C $(dir $(LIB))
-			$(CC) $(INCLUDE) $(LIB) ${READLINE} -o $(NAME) $(OBJS)
+			$(CC) $(INCLUDE) $(READLINE) $(LIB) -o $(NAME) $(OBJS)
 
 clean:
 			$(RM) $(OBJS)

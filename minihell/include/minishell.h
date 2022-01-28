@@ -15,12 +15,24 @@
 typedef struct s_cmd
 {
 	char **cmd;
+	char **redicts;
+	int fd_in;
+	int fd_out;
 	struct s_cmd *next;
 	struct s_cmd *back;
 }t_cmd;
 
 
 int pipes(t_cmd *lst, char **env);
+t_cmd *parce_input(char **input);
+char	**ft_split_f_shell(char const *s, char c);
+int lentab(char **ms);
+char **argv_dup(char **ar);
+t_cmd *lst_init(char **list);
+void lst_add(t_cmd **cmd, t_cmd *element);
+int	ft_strcmp(const char *s1, const char *s2);
+int redirect_right(char *file);
+void ft_redirect_register(t_cmd **cmd);
 /*
 1)cmd[0] = "/bin/cat"
 2)cmd[1] = "-e"
