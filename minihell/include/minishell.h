@@ -12,10 +12,13 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+int g_exit;
+
 typedef struct s_cmd
 {
 	char **cmd;
 	char **redicts;
+	int fd_heredoc;
 	int fd_in;
 	int fd_out;
 	struct s_cmd *next;
@@ -33,6 +36,10 @@ void lst_add(t_cmd **cmd, t_cmd *element);
 int	ft_strcmp(const char *s1, const char *s2);
 int redirect_right(char *file);
 void ft_redirect_register(t_cmd **cmd);
+void	ctrl_wd(int signum);
+void	cmd_c_sl(int signum);
+void	cmd_c_fork(int signum);
+void chlen(int signal);
 /*
 1)cmd[0] = "/bin/cat"
 2)cmd[1] = "-e"

@@ -1,5 +1,6 @@
 #include "../include/minishell.h"
 
+int g_exit;
 
 void pwd(void)
 {
@@ -41,6 +42,7 @@ t_cmd *lst_init(char **list)
 	element->next = NULL;
 	element->back = NULL;
 	element->redicts = NULL;
+	element->fd_heredoc = -1;
 	element->fd_in = -1;
 	element->fd_out = -1;
 	element->cmd = argv_dup(list);
@@ -68,6 +70,8 @@ void exec(t_cmd **cmd, char **env)
 	while ((*cmd)->back)
 		*cmd = (*cmd)->back;
 	ft_redirect_register(cmd);
+	if (g_exit == 130)
+		return ;
 	pipes(*cmd, env);
 	return ;
 	// tmp = *cmd;
@@ -136,6 +140,12 @@ void test(t_cmd *cmd)
 	}
 }
 
+void	ctrl_wd(int signum)
+{
+	(void)signum;
+	g_exit = 130;
+}
+
 void	cmd_c_sl(int signum)
 {
 	(void)signum;
@@ -153,6 +163,7 @@ void chlen(int signal)
 	(void)signal;
 	rl_on_new_line();
 	rl_redisplay();
+	g_exit = 1;
 	write(1, "  \n", 3);
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -174,6 +185,7 @@ int main (int argc, char **argv, char **env)
 
 	// pipes(env);
 	// return (0);
+	g_exit = 0;
 	while (1)
 	{
 		signal(SIGINT, chlen);
