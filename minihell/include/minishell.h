@@ -25,6 +25,16 @@ typedef struct s_cmd
 	struct s_cmd *back;
 }t_cmd;
 
+typedef struct s_env
+{
+	char *name;
+	char *array;
+	// char symbol;
+	struct s_env *next;
+	struct s_env *back;
+	struct s_env *next_order;
+	struct s_env *back_order;
+}t_env;
 
 int pipes(t_cmd *lst, char **env);
 t_cmd *parce_input(char **input);
@@ -39,7 +49,12 @@ void ft_redirect_register(t_cmd **cmd);
 void	ctrl_wd(int signum);
 void	cmd_c_sl(int signum);
 void	cmd_c_fork(int signum);
-void chlen(int signal);
+void sign(int signal);
+char *get_value(char *str);
+t_env *lst_init_env(char *str);
+void lst_add_env(t_env **lst, t_env *element);
+t_env *ajaraguju(char **env_v);
+int print_env(t_env *str);
 /*
 1)cmd[0] = "/bin/cat"
 2)cmd[1] = "-e"
@@ -52,7 +67,7 @@ cmd = cmd->next;
 2)cmd[1] = "-l"
 3)cmd[2] = NULL
 */
-
+void free_argv(char **good_bye);
 void voi (void);
 
 

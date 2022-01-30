@@ -158,7 +158,7 @@ void	cmd_c_fork(int signum)
 	write(1, "\n", 1);
 }
 
-void chlen(int signal)
+void sign(int signal)
 {
 	(void)signal;
 	rl_on_new_line();
@@ -167,19 +167,24 @@ void chlen(int signal)
 	write(1, "  \n", 3);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	printf("Хуй\n");
+	printf("c signal\n");
 	rl_redisplay();
 }
 
-int main (int argc, char **argv, char **env)
+int main (int argc, char **argv, char **ev)
 {
 	(void)argc;
 	(void)argv;
 	char *str;
+	char **env;
 	t_cmd *cmd;
+	t_env *evnironment;
 
 	cmd = NULL;
 	str = NULL;
+	env = argv_dup(ev);
+	evnironment = ajaraguju(env);
+
 	// char *from_D[5] = {"/usr/bin/say", "-v", "Milena", "чь", NULL};
 	// char *from_D[3] = {"/usr/bin/say", "ту ту ту", NULL};
 
@@ -188,7 +193,7 @@ int main (int argc, char **argv, char **env)
 	g_exit = 0;
 	while (1)
 	{
-		signal(SIGINT, chlen);
+		signal(SIGINT, sign);
 		signal(SIGQUIT, SIG_IGN);
 		str = readline("AAA БЛЯ ГДЕ Я?> ");
 		signal(SIGINT, cmd_c_fork);
@@ -198,7 +203,10 @@ int main (int argc, char **argv, char **env)
 		// str = ft_strdup("say -v Yuri \"Айгуль, че как? Попу мыл? good\"");
 		// str = ft_strdup("ls -la | cat -e | wc -l");
 		if (!str || !ft_strncmp(str, "exit", 5))
+		{	
+			write(1, "exit\n", 5);
 			exit(0);
+		}
 		if (!*str)
 			continue ;
 		if (str)
@@ -210,6 +218,7 @@ int main (int argc, char **argv, char **env)
 		cmd = NULL;
 
 	}
+	free_argv(env);
 	free(str);
 	return (0);
 }

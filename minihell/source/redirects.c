@@ -130,6 +130,7 @@ void ft_redirect_register(t_cmd **cmd)
 				printf("pipska\n");
 				if ((*cmd)->fd_out != -1)
 					close((*cmd)->fd_out);
+				if ((*cmd)->fd_out)	
 				(*cmd)->fd_out = redirect_right((*cmd)->redicts[i + 1]);
 				//check yest li file
 			}
@@ -137,6 +138,7 @@ void ft_redirect_register(t_cmd **cmd)
 			{
 				if ((*cmd)->fd_out != -1)
 					close((*cmd)->fd_out);
+				if ((*cmd)->fd_out)
 				(*cmd)->fd_out = redirect_right_append((*cmd)->redicts[i + 1]);
 				//check yest li file
 			}
@@ -144,6 +146,7 @@ void ft_redirect_register(t_cmd **cmd)
 			{
 				if ((*cmd)->fd_in != -1)
 					close((*cmd)->fd_in);
+				if ((*cmd)->fd_in)
 				(*cmd)->fd_in = redirect_left((*cmd)->redicts[i + 1]);
 				//check yest li file
 			}
@@ -151,6 +154,7 @@ void ft_redirect_register(t_cmd **cmd)
 			{
 				if ((*cmd)->fd_in != -1)
 					close((*cmd)->fd_in);
+				if ((*cmd)->fd_in)
 				(*cmd)->fd_in = (*cmd)->fd_heredoc;
 				//check yest li file
 			}
