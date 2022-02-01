@@ -32,7 +32,7 @@ int check_stdin(t_cmd *cmd)
 	return (0);
 }
 
-int pipes(t_cmd *lst, char **env)
+int pipes(t_cmd *lst, t_env *env)
 {
 	int p_a[2];
 	int p_b[2];
@@ -109,7 +109,7 @@ int pipes(t_cmd *lst, char **env)
 					close(p_a[0]);
 				}
 			}
-			if(execve(lst->cmd[0], lst->cmd, env) == -1)
+			if(execve(lst->cmd[0], lst->cmd, env_chars(env)) == -1)
 			{
 				write(2, strerror(errno), ft_strlen(strerror(errno)));
 				write(2, ": ", 2);

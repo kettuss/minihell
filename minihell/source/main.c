@@ -2,10 +2,6 @@
 
 int g_exit;
 
-void pwd(void)
-{
-	printf("%s\n", getcwd(NULL, 0));
-}
 
 
 void voi (void)
@@ -62,17 +58,19 @@ void lst_add(t_cmd **cmd, t_cmd *element)
 }
 
 
-void exec(t_cmd **cmd, char **env)
+void exec(t_cmd **cmd, t_env **env)
 {
 	// t_cmd *tmp;
 	// pid_t pid;
 
 	while ((*cmd)->back)
 		*cmd = (*cmd)->back;
+	while ((*env)->back)
+		*env = (*env)->back;
 	ft_redirect_register(cmd);
 	if (g_exit == 130)
 		return ;
-	pipes(*cmd, env);
+	pipes(*cmd, *env);
 	return ;
 	// tmp = *cmd;
 	// if (tmp->redicts != NULL)
@@ -214,11 +212,22 @@ int main (int argc, char **argv, char **ev)
 		cmd = parce_input(ft_split_f_shell(str, ' '));
 		// test(cmd);
 		// exit(0);
-		exec(&cmd, env);
+		if(!ft_strncmp(str, "echo", 4))
+		{
+			echo(cmd->cmd + 1);
+			continue ;	
+		}
+		if(!ft_strncmp(str, "pwd", 3))
+		{
+			pwd(evnironment);
+			continue ;	
+		}
+		exec(&cmd, &evnironment);
 		cmd = NULL;
 
 	}
 	free_argv(env);
 	free(str);
 	return (0);
+	
 }

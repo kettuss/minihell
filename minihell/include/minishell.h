@@ -36,7 +36,7 @@ typedef struct s_env
 	struct s_env *back_order;
 }t_env;
 
-int pipes(t_cmd *lst, char **env);
+int pipes(t_cmd *lst, t_env *env);
 t_cmd *parce_input(char **input);
 char	**ft_split_f_shell(char const *s, char c);
 int lentab(char **ms);
@@ -55,6 +55,10 @@ t_env *lst_init_env(char *str);
 void lst_add_env(t_env **lst, t_env *element);
 t_env *ajaraguju(char **env_v);
 int print_env(t_env *str);
+int echo(char **ogo);
+char *get_env(t_env *cmd, char *variable);
+char **env_chars(t_env *env);
+int pwd(t_env *env);
 /*
 1)cmd[0] = "/bin/cat"
 2)cmd[1] = "-e"

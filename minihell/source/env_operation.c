@@ -1,5 +1,47 @@
 #include "../include/minishell.h"
 
+int lenenv(t_env *env)
+{
+	int i;
+
+	i = 0;
+	while (env)
+	{
+		env = env->next;
+		i++;
+	}
+	return (i);
+}
+
+char **env_chars(t_env *env)
+{
+	char **env_chars;
+	char *temp;
+	int i;
+
+	env_chars = (char **)malloc(sizeof(char *) * (lenenv(env) + 1));
+	env_chars[lenenv(env)] = NULL;
+	i = 0;
+	while (env)
+	{
+		env_chars[i] = ft_strdup(env->name);
+		temp = env_chars[i];
+		if (env->array && *env->array)
+		{
+			env_chars[i] = ft_strjoin(env_chars[i], "=");
+			free(temp);
+			temp = env_chars[i];
+			env_chars[i] = ft_strjoin(env_chars[i], env->array);
+			free(temp);
+		}
+		else
+			free(temp);
+		env = env->next;
+		i++;
+	}
+	return (env_chars);
+}
+
 int print_env(t_env *str)
 {
 	//write(1, &str, 10);
