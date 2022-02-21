@@ -1,5 +1,22 @@
 #include "../include/minishell.h"
 
+char *get_value_of_variable_from_env(t_env *env, char *variable)
+{
+	while (env->back)
+		env = env->back;
+	while (env)
+	{
+		if (ft_strcmp(env->name, variable) == 0)
+		{
+			if (env->array)
+				return (ft_strdup(env->array));
+			break;
+		}
+		env = env->next;
+	}
+	return (NULL);
+}
+
 int lenenv(t_env *env)
 {
 	int i;
@@ -99,6 +116,7 @@ void lst_add_env(t_env **lst, t_env *element)
 	element->back = *lst;
 	*lst = element;
 }
+
 t_env *ajaraguju(char **env_v)
 {
 	int i;
@@ -110,5 +128,6 @@ t_env *ajaraguju(char **env_v)
 	{
 		lst_add_env(&tyt, lst_init_env(env_v[i]));
 	}
+	alpha_variables(tyt);
 	return(tyt);
 }

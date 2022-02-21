@@ -171,14 +171,54 @@ void find_path_to_cmds(t_cmd **cmd)
 	*cmd = tmp;
 }
 
+char **argv_dup_without_position(char **str, int indx)
+{
+	int i;
+	int j;
+	char **new_arg;
 
+	i = 0;
+	j = -1;
+	new_arg = (char **)malloc(sizeof(char *) * lentab(str));
+	new_arg[lentab(str) - 1] = NULL;
+	while (str[++j])
+	{
+		if (j == indx)
+			continue ;
+		new_arg[i] = ft_strdup(str[j]);
+		i++;
+	}
+	return (new_arg);
+}
 
-t_cmd *parce_input(char **input)
+t_cmd *parce_input(char **input, t_env *env)
 {
 	t_cmd *cmd = NULL;
 	int i;
+	int str;
+	char *temp;
+	char **temp_mass;
 
+	str = -1;
+	while (input[++str])
+	{
+		if (input[str][0] == '$' && ft_strlen(input[str]) > 1)
+		{
+			temp = input[str];
+			input[str] = get_value_of_variable_from_env(env, input[str] + 1);
+			if (!input[str])
+			{
+				temp_mass = input;
+				input = argv_dup_without_position(input, str--);
+				free_argv(temp_mass);
+			}
+			else
+				free(temp);
+		}
+	}
 	i = lentab(input);
+	if (!i)
+		return (cmd);
 	while (input[--i])
 	{
 		if (!ft_strcmp("|", input[i]))

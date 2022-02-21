@@ -12,6 +12,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# define MAX 1
+# define MIN 0
+
 int g_exit;
 
 typedef struct s_cmd
@@ -37,7 +40,7 @@ typedef struct s_env
 }t_env;
 
 int pipes(t_cmd *lst, t_env *env);
-t_cmd *parce_input(char **input);
+t_cmd *parce_input(char **input, t_env *env);
 char	**ft_split_f_shell(char const *s, char c);
 int lentab(char **ms);
 char **argv_dup(char **ar);
@@ -59,6 +62,18 @@ int echo(char **ogo);
 char *get_env(t_env *cmd, char *variable);
 char **env_chars(t_env *env);
 int pwd(t_env *env);
+
+int	ft_get_nbr_symbols2(char const *s, char c, size_t *i, size_t *nb_strs);
+int	ft_get_nbr_symbols(char const *s, char c, size_t *i, size_t *nb_strs);
+size_t	ft_get_get_nbstr(char const *s, char c, size_t i, size_t nb_strs);
+int	if_equals(char **next_str, size_t **next_str_len, char c, int i);
+int	if_redirect(char **next_str, size_t **next_str_len, int i);
+
+int ft_export(char **args, t_env **ev);
+void	alpha_variables(t_env *env);
+int check_duplicate_variable(t_env *env, char **str, char *original);
+char *get_value_of_variable_from_env(t_env *env, char *variable);
+
 /*
 1)cmd[0] = "/bin/cat"
 2)cmd[1] = "-e"

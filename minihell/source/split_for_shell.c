@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_for_shell.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tharodon <tharodon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:29:05 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/27 20:49:23 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/21 15:58:43 by tharodon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,90 +26,6 @@ char	**ft_split_free(char **tab)
 	return (0);
 }
 
-
-int	ft_get_nbr_symbols2(char const *s, char c, size_t *i, size_t *nb_strs)
-{
-	if (s[(*i)] == c)
-	{
-		if ((s[(*i) + 1] != '|' && s[(*i) + 1] != '\'' && s[(*i) + 1] != '"'
-				&& s[(*i) + 1] != '<' && s[(*i) + 1] != '>')
-			&& (s[(*i) - 1] != '|' && s[(*i) - 1] != '\''
-				&& s[(*i) - 1] != '"' && s[(*i) - 1] != '<'
-				&& s[(*i) - 1] != '>'))
-		{
-			(*nb_strs)++;
-			while (s[(*i)] && s[(*i)] == c)
-				(*i)++;
-			return (2);
-		}
-		else
-			(*i)++;
-	}
-	if (s[(*i)] == '|' && s[(*i) + 1] != '|')
-		(*nb_strs)++;
-	return (0);
-}
-
-int	ft_get_nbr_symbols(char const *s, char c, size_t *i, size_t *nb_strs)
-{
-	if (s[(*i)] != c && s[(*i)] != '\"' && s[(*i)] != '\''
-		&& s[(*i)] != '|' && s[(*i)] != '<' && s[(*i)] != '>')
-	{
-		if (((*i) != 0) && s[(*i) - 1] != c)
-			(*nb_strs)++;
-		if ((*i) != 0 && (s[(*i) - 1] == c && (s[(*i) - 2] == '|'
-					|| s[(*i) - 2] == '"' || s[(*i) - 2] == '\''
-					|| s[(*i) - 2] == '<' || s[(*i) - 2] == '>')))
-			(*nb_strs)++;
-		while (s[(*i)] && s[(*i)] != c && s[(*i)] != '\"' && s[(*i)] != '\''
-			&& s[(*i)] != '|' && s[(*i)] != '<' && s[(*i)] != '>')
-		{
-			(*i)++;
-			if (s[(*i)] == '=')
-			{
-				(*i)++;
-				while (s[(*i)] && (s[(*i)] != '|'
-						|| s[(*i)] != '<' || s[(*i)] != '>'
-						|| s[(*i)] != c))
-					(*i)++;
-			}
-		}
-		return (2);
-	}
-	return (0);
-}
-
-
-size_t	ft_get_get_nbstr(char const *s, char c, size_t i, size_t nb_strs)
-{
-	while (s[i])
-	{
-		if (ft_get_nbr_symbols2(s, c, &i, &nb_strs) == 2
-			|| ft_get_nbr_symbols(s, c, &i, &nb_strs) == 2)
-			continue ;
-		if (s[i] == 34 || s[i] == 39)
-		{
-			nb_strs++;
-			if (s[i++] == 34)
-				while (s[i++] != 34)
-					;
-			else
-				while (s[i++] != 39)
-					;
-			continue ;
-		}
-		if (s[i] == '<' || s[i] == '>')
-		{
-			nb_strs++;
-			if (s[i + 1] == '<' || s[i + 1] == '>')
-				i++;
-		}
-		i++;
-	}
-	return (nb_strs);
-}
-
-
 static	size_t	ft_get_nb_strs(char const *s, char c)
 {
 	size_t	i;
@@ -125,54 +41,6 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 		&& s[i] != '|' && s[i] != '<' && s[i] != '>')
 		nb_strs++;
 	return (ft_get_get_nbstr(s, c, i, nb_strs));
-}
-
-int	if_equals(char **next_str, size_t **next_str_len, char c, int i)
-{
-	(void)c;
-	if ((*next_str)[i] == '=')
-	{
-		(*(*next_str_len))++;
-		i++;
-		while ((*next_str)[i] && ((*next_str)[i] != '|'
-			|| (*next_str)[i] == '<' || (*next_str)[i] == '<'
-			|| (*next_str)[i] == ' '))
-		{
-			(*(*next_str_len))++;
-			i++;
-		}
-		return(2);
-	}
-	return (0);
-}
-
-int	if_redirect(char **next_str, size_t **next_str_len, char c, int i)
-{
-	(void)c;
-	if ((*next_str)[i] == '<' || (*next_str)[i] == '>')
-	{
-		i++;
-		(*(*next_str_len))++;
-		if ((*next_str)[i] == '<' || (*next_str)[i] == '>')
-		{
-			i++;
-			(*(*next_str_len))++;
-		}
-		return (2);
-	}
-	if ((*next_str)[i] == '|' && (*next_str)[i + 1] != '|')
-	{
-		i++;
-		(*(*next_str_len))++;
-		return (2);
-	}
-	if ((*next_str)[i] == '|' && (*next_str)[i + 1] == '|')
-	{
-		i += 2;
-		*(*next_str_len) += 2;
-		return (2);
-	}
-	return (0);
 }
 
 int	if_quotes(char **next_str, size_t **next_str_len, char c, int i)
@@ -205,7 +73,6 @@ int	if_quotes(char **next_str, size_t **next_str_len, char c, int i)
 	return (0);
 }
 
-
 static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 {
 	size_t	i;
@@ -220,7 +87,7 @@ static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 		if ((*next_str)[i] == c)
 			return ;
 		if (if_quotes(next_str, &next_str_len, c, i) == 2
-			|| if_redirect(next_str, &next_str_len, c, i) == 2
+			|| if_redirect(next_str, &next_str_len, i) == 2
 			|| if_equals(next_str, &next_str_len, c, i) == 2)
 			return ;
 		(*next_str_len)++;

@@ -182,6 +182,8 @@ int main (int argc, char **argv, char **ev)
 	str = NULL;
 	env = argv_dup(ev);
 	evnironment = ajaraguju(env);
+	ft_export(ft_split("a=/bin/cat", ' '), &evnironment);
+	ft_export(NULL, &evnironment);
 
 	// char *from_D[5] = {"/usr/bin/say", "-v", "Milena", "чь", NULL};
 	// char *from_D[3] = {"/usr/bin/say", "ту ту ту", NULL};
@@ -199,7 +201,7 @@ int main (int argc, char **argv, char **ev)
 		// str = ft_strdup("> 3 cat -e 4 | < f1 wc -l > f2 | pwd | ls -la");
 		// str = ft_strdup("<4 >> 1 << 123 >> 1 >2 cat -e 4 <w <<w >> 2 > r");
 		// str = ft_strdup("say -v Yuri \"Айгуль, че как? Попу мыл? good\"");
-		// str = ft_strdup("ls -la | cat -e | wc -l");
+		// str = ft_strdup("$a | wc -l");
 		if (!str || !ft_strncmp(str, "exit", 5))
 		{	
 			write(1, "exit\n", 5);
@@ -207,9 +209,11 @@ int main (int argc, char **argv, char **ev)
 		}
 		if (!*str)
 			continue ;
-		if (str)
-			add_history(str);
-		cmd = parce_input(ft_split_f_shell(str, ' '));
+		// if (str)
+		// 	add_history(str);
+		cmd = parce_input(ft_split_f_shell(str, ' '), evnironment);
+		if (!cmd)
+			continue ;
 		// test(cmd);
 		// exit(0);
 		if(!ft_strncmp(str, "echo", 4))
@@ -225,6 +229,7 @@ int main (int argc, char **argv, char **ev)
 		exec(&cmd, &evnironment);
 		cmd = NULL;
 
+		break ;
 	}
 	free_argv(env);
 	free(str);
