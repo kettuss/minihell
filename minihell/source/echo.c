@@ -6,46 +6,47 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:52:47 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 19:52:48 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/21 20:00:57 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int flag_n(char *str)
+int	flag_n(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(str[0] != '-')
-		return(1);
-	while(str[++i])
+	if (str[0] != '-')
+		return (1);
+	while (str[++i])
 	{
-		if(str[i] != 'n')
+		if (str[i] != 'n')
 			return (1);
 	}
-	return(0);
+	return (0);
 }
-int echo(char **ogo)
+
+int	echo(char **ogo)
 {
-	int ogogo;
-	int slash_n;
+	int	ogogo;
+	int	slash_n;
 
 	ogogo = 0;
 	slash_n = 0;
-	while(ogo[ogogo] != NULL && !flag_n(ogo[ogogo]))
+	while (ogo[ogogo] != NULL && !flag_n(ogo[ogogo]))
 	{
 		slash_n = 1;
 		ogogo++;
 	}
-	while(ogo[ogogo])
+	while (ogo[ogogo])
 	{
 		ft_putstr_fd(ogo[ogogo], 1);
-		if(ogo[ogogo + 1] != NULL)
+		if (ogo[ogogo + 1] != NULL)
 			ft_putstr_fd(" ", 1);
 		ogogo++;
 	}
-	if(slash_n == 0)
+	if (slash_n == 0)
 		ft_putstr_fd("\n", 1);
 	return (0);
 }

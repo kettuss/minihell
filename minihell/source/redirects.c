@@ -6,15 +6,15 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:00 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 19:54:01 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/21 20:11:17 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int redirect_right(char *file)
+int	redirect_right(char *file)
 {
-	int fd;
+	int	fd;
 
 	fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0666);
 	if (fd == -1)
@@ -22,19 +22,19 @@ int redirect_right(char *file)
 	return (fd);
 }
 
-int redirect_right_append(char *file)
+int	redirect_right_append(char *file)
 {
-	int fd;
+	int	fd;
 
-	fd = open(file, O_WRONLY | O_APPEND| O_CREAT, 0666);
+	fd = open (file, O_WRONLY | O_APPEND| O_CREAT, 0666);
 	if (fd == -1)
 		return (0);
 	return (fd);
 }
 
-int redirect_left(char *file)
+int	redirect_left(char *file)
 {
-	int fd;
+	int	fd;
 
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
@@ -42,14 +42,14 @@ int redirect_left(char *file)
 	return (fd);
 }
 
-int ft_herdoc(char *stop)
+int	ft_herdoc(char *stop)
 {
-	int fd[2];
-	pid_t pid;
-	char *str;
+	int		fd[2];
+	pid_t	pid;
+	char	*str;
 	void	*sgnl;
 	sgnl = NULL;
-	int	out;
+	int		out;
 
 	out = 0;
 	pipe(fd);
@@ -60,7 +60,7 @@ int ft_herdoc(char *stop)
 	rl_getc_function = getc;
 	if (!pid)
 	{
-		while(1)
+		while (1)
 		{
 			str = readline("herdoc> ");
 			if (!*str)
@@ -70,7 +70,7 @@ int ft_herdoc(char *stop)
 				free(str);
 				exit(130);
 			}
-			if(!str || ft_strcmp(str, stop) == 0)
+			if (!str || ft_strcmp(str, stop) == 0)
 				exit(0);
 			ft_putstr_fd(str, fd[1]);
 			ft_putstr_fd("\n", fd[1]);
@@ -89,18 +89,18 @@ int ft_herdoc(char *stop)
 	return (fd[0]);
 }
 
-void ft_check_heredoc(t_cmd **cmd)
+void	ft_check_heredoc(t_cmd **cmd)
 {
-	t_cmd *temp;
-	int i;
+	t_cmd	*temp;
+	int		i;
 
 	i = -1;
 	temp = *cmd;
 	while (*cmd)
 	{
-		while((*cmd)->redicts[++i])
+		while ((*cmd)->redicts[++i])
 		{
-			if(!ft_strcmp((*cmd)->redicts[i], "<<"))
+			if (!ft_strcmp((*cmd)->redicts[i], "<<"))
 			{
 				if ((*cmd)->fd_heredoc != -1)
 					close((*cmd)->fd_heredoc);
@@ -118,13 +118,13 @@ void ft_check_heredoc(t_cmd **cmd)
 	*cmd = temp;
 }
 
-void ft_redirect_register(t_cmd **cmd)
+void	ft_redirect_register(t_cmd **cmd)
 {
-	t_cmd *tmp;
-	int i;
+	t_cmd	*tmp;
+	int		i;
 
 	g_exit = 0;
-	while((*cmd)->back)
+	while ((*cmd)->back)
 	{
 		*cmd = (*cmd)->back;
 	}
@@ -132,7 +132,7 @@ void ft_redirect_register(t_cmd **cmd)
 	ft_check_heredoc(cmd);
 	if (g_exit == 130)
 		return ;
-	while(*cmd)
+	while (*cmd)
 	{
 		i = -1;
 		while ((*cmd)->redicts[++i])
@@ -142,7 +142,7 @@ void ft_redirect_register(t_cmd **cmd)
 				printf("pipska\n");
 				if ((*cmd)->fd_out != -1)
 					close((*cmd)->fd_out);
-				if ((*cmd)->fd_out)	
+				if ((*cmd)->fd_out)
 				(*cmd)->fd_out = redirect_right((*cmd)->redicts[i + 1]);
 				//check yest li file
 			}

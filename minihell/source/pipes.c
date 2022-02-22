@@ -6,27 +6,26 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:09 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 19:54:10 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/21 20:06:32 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-
-int land_list(t_cmd *str)
+int	land_list(t_cmd *str)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
-	while(str)
+	while (str)
 	{
 		str = str->next;
 		i++;
 	}
-	return(i);
+	return (i);
 }
 
-int check_stdout(t_cmd *cmd)
+int	check_stdout(t_cmd *cmd)
 {
 	if (cmd->fd_out == -1)
 		return (1);
@@ -35,7 +34,7 @@ int check_stdout(t_cmd *cmd)
 	return (0);
 }
 
-int check_stdin(t_cmd *cmd)
+int	check_stdin(t_cmd *cmd)
 {
 	if (cmd->fd_in == -1)
 		return (1);
@@ -44,13 +43,13 @@ int check_stdin(t_cmd *cmd)
 	return (0);
 }
 
-int pipes(t_cmd *lst, t_env *env)
+int	pipes(t_cmd *lst, t_env *env)
 {
-	int p_a[2];
-	int p_b[2];
-	int flag;
-	pid_t pid;
-	int land;
+	int		p_a[2];
+	int		p_b[2];
+	int		flag;
+	pid_t	pid;
+	int		land;
 
 	flag = 0;
 	while (lst->back)
@@ -58,22 +57,22 @@ int pipes(t_cmd *lst, t_env *env)
 	land = land_list(lst);
 	while (lst)
 	{
-		if(lst->next)
+		if (lst->next)
 		{
-			if(!flag)
+			if (!flag)
 				pipe(p_a);
 			else
 				pipe(p_b);
 		}
 		pid = fork();
-		if(!pid)
+		if (!pid)
 		{
 			if (!lst->back && !lst->next)
 			{
 				check_stdin(lst);
 				check_stdout(lst);
 			}
-			else if(!lst->back)
+			else if (!lst->back)
 			{
 				check_stdin(lst);
 				if (check_stdout(lst))
@@ -81,9 +80,9 @@ int pipes(t_cmd *lst, t_env *env)
 				close(p_a[0]);
 				close(p_a[1]);
 			}
-			else if(lst->next && lst->back)
+			else if (lst->next && lst->back)
 			{
-				if(!flag)
+				if (!flag)
 				{
 					if (check_stdout(lst))
 						dup2(p_a[1], 1);
@@ -104,9 +103,9 @@ int pipes(t_cmd *lst, t_env *env)
 					close(p_b[0]);
 				}
 			}
-			else if(!lst->next)
+			else if (!lst->next)
 			{
-				if(!flag)
+				if (!flag)
 				{
 					check_stdout(lst);
 					if (check_stdin(lst))
@@ -121,7 +120,7 @@ int pipes(t_cmd *lst, t_env *env)
 					close(p_a[0]);
 				}
 			}
-			if(execve(lst->cmd[0], lst->cmd, env_chars(env)) == -1)
+			if (execve(lst->cmd[0], lst->cmd, env_chars(env)) == -1)
 			{
 				write(2, strerror(errno), ft_strlen(strerror(errno)));
 				write(2, ": ", 2);
@@ -138,11 +137,11 @@ int pipes(t_cmd *lst, t_env *env)
 				close(lst->fd_out);
 			if (!lst->next && !lst->back)
 				;
-			else if(!lst->back)
+			else if (!lst->back)
 				close(p_a[1]);
-			else if(lst->next && lst->back)
+			else if (lst->next && lst->back)
 			{
-				if(flag)
+				if (flag)
 				{	
 					close(p_b[1]);
 					close(p_a[0]);
@@ -160,16 +159,16 @@ int pipes(t_cmd *lst, t_env *env)
 				else
 					close(p_b[0]);
 			}
-			if(!flag)
+			if (!flag)
 				flag = 1;
 			else
 				flag = 0;
 			lst = lst->next;
 		}
 	}
-	while(land--)
+	while (land--)
 	{
 		wait(0);
 	}
-	return(0);
+	return (0);
 }

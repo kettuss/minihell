@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:12 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 19:54:13 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/21 20:05:18 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,11 +139,11 @@ void	cmd_run(t_cmd **cmd)
 	*cmd = temp;
 }
 
-char *path_cmp(char *cmd, char **paths)
+char	*path_cmp(char *cmd, char **paths)
 {
-	int i;
-	char *tmp;
-	char *maybe_path;
+	int		i;
+	char	*tmp;
+	char	*maybe_path;
 
 	i = -1;
 	tmp = ft_strjoin("/", cmd);
@@ -160,11 +160,11 @@ char *path_cmp(char *cmd, char **paths)
 	return (ft_strdup(cmd));
 }
 
-void find_path_to_cmds(t_cmd **cmd)
+void	find_path_to_cmds(t_cmd **cmd)
 {
-	t_cmd *tmp;
-	char **paths;
-	char *env_path;
+	t_cmd	*tmp;
+	char	**paths;
+	char	*env_path;
 
 	env_path = getenv("PATH=");
 	if (!env_path)
@@ -183,11 +183,11 @@ void find_path_to_cmds(t_cmd **cmd)
 	*cmd = tmp;
 }
 
-char **argv_dup_without_position(char **str, int indx)
+char	**argv_dup_without_position(char **str, int indx)
 {
-	int i;
-	int j;
-	char **new_arg;
+	int		i;
+	int		j;
+	char	**new_arg;
 
 	i = 0;
 	j = -1;
@@ -203,7 +203,7 @@ char **argv_dup_without_position(char **str, int indx)
 	return (new_arg);
 }
 
-t_cmd *parce_input(char **input, t_env *env)
+t_cmd	*parce_input(char **input, t_env *env)
 {
 	t_cmd *cmd = NULL;
 	int i;

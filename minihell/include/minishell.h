@@ -62,6 +62,8 @@ int echo(char **ogo);
 char *get_env(t_env *cmd, char *variable);
 char **env_chars(t_env *env);
 int pwd(t_env *env);
+int ft_cd(char *path, t_env *env);
+int ft_unset(t_env *env, char **variable);
 
 int	ft_get_nbr_symbols2(char const *s, char c, size_t *i, size_t *nb_strs);
 int	ft_get_nbr_symbols(char const *s, char c, size_t *i, size_t *nb_strs);

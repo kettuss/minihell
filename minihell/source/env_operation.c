@@ -6,13 +6,13 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:26 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 19:54:27 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:32:23 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char *get_value_of_variable_from_env(t_env *env, char *variable)
+char	*get_value_of_variable_from_env(t_env *env, char *variable)
 {
 	while (env->back)
 		env = env->back;
@@ -22,16 +22,16 @@ char *get_value_of_variable_from_env(t_env *env, char *variable)
 		{
 			if (env->array)
 				return (ft_strdup(env->array));
-			break;
+			break ;
 		}
 		env = env->next;
 	}
 	return (NULL);
 }
 
-int lenenv(t_env *env)
+int	lenenv(t_env *env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (env)
@@ -42,11 +42,11 @@ int lenenv(t_env *env)
 	return (i);
 }
 
-char **env_chars(t_env *env)
+char	**env_chars(t_env *env)
 {
-	char **env_chars;
-	char *temp;
-	int i;
+	char	**env_chars;
+	char	*temp;
+	int		i;
 
 	env_chars = (char **)malloc(sizeof(char *) * (lenenv(env) + 1));
 	env_chars[lenenv(env)] = NULL;
@@ -71,41 +71,41 @@ char **env_chars(t_env *env)
 	return (env_chars);
 }
 
-int print_env(t_env *str)
+int	print_env(t_env *str)
 {
 	//write(1, &str, 10);
-	while(str->back)
+	while (str->back)
 	{
 		str = str->back;
 	}
-	while(str)
+	while (str)
 	{
 		ft_putstr_fd(str->name, 1);
-		if(str->array)
+		if (str->array)
 			ft_putstr_fd("=", 1);
 		ft_putstr_fd(str->array, 1);
 		ft_putstr_fd("\n", 1);
 		str = str->next;
 	}
-	return(0);
+	return (0);
 }
 
-char *get_value(char *str)
+char	*get_value(char *str)
 {
-	int i;
+	int	i;
 
 	i = -1;
-	while(str[++i])
+	while (str[++i])
 	{
-		if(str[i] == '=')
-			return(ft_strdup(str + (i + 1)));
+		if (str[i] == '=')
+			return (ft_strdup(str + (i + 1)));
 	}
-	return(NULL);
+	return (NULL);
 }
 
-t_env *lst_init_env(char *str)
+t_env	*lst_init_env(char *str)
 {
-	t_env *tam;
+	t_env	*tam;
 
 	tam = (t_env *)malloc(sizeof(t_env));
 	tam->back = NULL;
@@ -114,12 +114,12 @@ t_env *lst_init_env(char *str)
 	tam->back_order = NULL;
 	tam->name = *ft_split(str, '=');
 	tam->array = get_value(str);
-	return(tam);
+	return (tam);
 }
 
-void lst_add_env(t_env **lst, t_env *element)
+void	lst_add_env(t_env **lst, t_env *element)
 {
-	if(!*lst)
+	if (!*lst)
 	{
 		*lst = element;
 		return ;
@@ -129,17 +129,17 @@ void lst_add_env(t_env **lst, t_env *element)
 	*lst = element;
 }
 
-t_env *ajaraguju(char **env_v)
+t_env	*ajaraguju(char **env_v)
 {
-	int i;
-	t_env *tyt;
+	int		i;
+	t_env	*tyt;
 
 	i = -1;
 	tyt = NULL;
-	while(env_v[++i])
+	while (env_v[++i])
 	{
 		lst_add_env(&tyt, lst_init_env(env_v[i]));
 	}
 	alpha_variables(tyt);
-	return(tyt);
+	return (tyt);
 }

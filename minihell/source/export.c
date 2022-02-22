@@ -6,11 +6,23 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:23 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 19:54:24 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:42:34 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+char *check_usd(char *str, t_env *env)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	if (str[i] == '=' && str[i + 1] == '$' && ft_strlen(str + (i + 2)) > 0)
+		return (get_value_of_variable_from_env(env, str + (i + 2)));
+	return (ft_strdup(str + (i + 1)));
+}
 
 int check_duplicate_variable(t_env *env, char **str, char *original)
 {
@@ -21,7 +33,7 @@ int check_duplicate_variable(t_env *env, char **str, char *original)
 		if (ft_strcmp(env->name, *str) == 0)
 		{
 			free(env->array);
-			env->array = get_value(original);
+			env->array = check_usd(original, env);
 			free_argv(str);
 			return (1);
 		}

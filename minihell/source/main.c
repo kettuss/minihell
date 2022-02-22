@@ -6,33 +6,33 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:17 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 19:54:18 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/22 22:40:06 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int g_exit;
+int	g_exit;
 
-
-
-void voi (void)
+void	voi(void)
 {
 	return ;
 }
 
-int lentab(char **ms)
+int	lentab(char **ms)
 {
-	int i = -1;
+	int	i;
+
+	i = -1;
 	while (ms[++i])
 		;
 	return (i);
 }
 
-char **argv_dup(char **ar)
+char	**argv_dup(char **ar)
 {
-	int i;
-	char **copy;
+	int		i;
+	char	**copy;
 
 	i = -1;
 	copy = (char **)malloc(sizeof(char *) * (lentab(ar) + 1));
@@ -42,9 +42,9 @@ char **argv_dup(char **ar)
 	return (copy);
 }
 
-t_cmd *lst_init(char **list)
+t_cmd	*lst_init(char **list)
 {
-	t_cmd *element;
+	t_cmd	*element;
 
 	element = (t_cmd *)malloc(sizeof(t_cmd));
 	element->next = NULL;
@@ -54,12 +54,12 @@ t_cmd *lst_init(char **list)
 	element->fd_in = -1;
 	element->fd_out = -1;
 	element->cmd = argv_dup(list);
-	return(element);
+	return (element);
 }
 
-void lst_add(t_cmd **cmd, t_cmd *element)
+void	lst_add(t_cmd **cmd, t_cmd *element)
 {
-	if(!(*cmd))
+	if (!(*cmd))
 	{
 		*cmd = element;
 		return ;
@@ -70,7 +70,7 @@ void lst_add(t_cmd **cmd, t_cmd *element)
 }
 
 
-void exec(t_cmd **cmd, t_env **env)
+void	exec(t_cmd **cmd, t_env **env)
 {
 	// t_cmd *tmp;
 	// pid_t pid;
@@ -110,11 +110,11 @@ void exec(t_cmd **cmd, t_env **env)
 	// 	wait(0);
 }
 
-char *get_path_commd(char *cmd, char *path)
+char	*get_path_commd(char *cmd, char *path)
 {
-	char **paths;
-	int fd;
-	int i;
+	char	**paths;
+	int		fd;
+	int		i;
 
 	i = -1;
 	path += 5;
@@ -130,9 +130,11 @@ char *get_path_commd(char *cmd, char *path)
 	return (cmd);
 }
 
-void test(t_cmd *cmd)
+void	test(t_cmd *cmd)
 {
-	int i = -1;
+	int	i;
+
+	i = -1;
 	while (cmd->back)
 		cmd = cmd->back;
 	while (cmd)
@@ -168,7 +170,7 @@ void	cmd_c_fork(int signum)
 	write(1, "\n", 1);
 }
 
-void sign(int signal)
+void	sign(int signal)
 {
 	(void)signal;
 	rl_on_new_line();
@@ -181,21 +183,25 @@ void sign(int signal)
 	rl_redisplay();
 }
 
-int main (int argc, char **argv, char **ev)
+int	main(int argc, char **argv, char **ev)
 {
 	(void)argc;
 	(void)argv;
-	char *str;
-	char **env;
-	t_cmd *cmd;
-	t_env *evnironment;
+	char	*str;
+	char	**env;
+	t_cmd	*cmd;
+	t_env	*evnironment;
 
 	cmd = NULL;
 	str = NULL;
 	env = argv_dup(ev);
 	evnironment = ajaraguju(env);
-	ft_export(ft_split("a=/bin/cat", ' '), &evnironment);
+	ft_unset(evnironment, ft_split("Apple_PubSub_Socket_Render COLORTERM CPPFLAGS GIT_ASKPASS HOME HOMEBREW_CACHE HOMEBREW_TEMP LANG LDFLAGS LESS LOGNAME LSCOLORS OLDPWD ORIGINAL_XDG_CURRENT_DESKTOP PAGER PATH PWD SHELL SHLVL SSH_AUTH_SOCK TERM TERM_PROGRAM TERM_PROGRAM_VERSION TMPDIR USER VSCODE_GIT_ASKPASS_EXTRA_ARGS VSCODE_GIT_ASKPASS_MAIN VSCODE_GIT_ASKPASS_NODE VSCODE_GIT_IPC_HANDLE XPC_FLAGS XPC_SERVICE_NAME ZSH __CF_USER_TEXT_ENCODING", ' '));
 	ft_export(NULL, &evnironment);
+	// ft_cd("-", &evnironment);
+	// ft_export(NULL, &evnironment);
+	// ft_cd("~", &evnironment);
+	// ft_export(NULL, &evnironment);
 
 	// char *from_D[5] = {"/usr/bin/say", "-v", "Milena", "чь", NULL};
 	// char *from_D[3] = {"/usr/bin/say", "ту ту ту", NULL};
@@ -203,11 +209,11 @@ int main (int argc, char **argv, char **ev)
 	// pipes(env);
 	// return (0);
 	g_exit = 0;
-	while (1)
+	while (0)
 	{
 		signal(SIGINT, sign);
 		signal(SIGQUIT, SIG_IGN);
-		str = readline("AAA БЛЯ ГДЕ Я?> ");
+		str = readline("minishell> ");
 		signal(SIGINT, cmd_c_fork);
 		signal(SIGQUIT, cmd_c_sl);
 		// str = ft_strdup("> 3 cat -e 4 | < f1 wc -l > f2 | pwd | ls -la");
@@ -221,30 +227,33 @@ int main (int argc, char **argv, char **ev)
 		}
 		if (!*str)
 			continue ;
-		// if (str)
-		// 	add_history(str);
+		if (str)
+			add_history(str);
 		cmd = parce_input(ft_split_f_shell(str, ' '), evnironment);
 		if (!cmd)
 			continue ;
 		// test(cmd);
 		// exit(0);
-		if(!ft_strncmp(str, "echo", 4))
+		if (!ft_strncmp(str, "echo", 4))
 		{
 			echo(cmd->cmd + 1);
-			continue ;	
+			continue ;
 		}
-		if(!ft_strncmp(str, "pwd", 3))
+		if (!ft_strncmp(str, "pwd", 3))
 		{
 			pwd(evnironment);
-			continue ;	
+			continue ;
+		}
+		if (!ft_strncmp(str, "export", 6))
+		{
+			ft_export(cmd->cmd + 1, &evnironment);
+			continue ;
 		}
 		exec(&cmd, &evnironment);
 		cmd = NULL;
-
-		break ;
+		// break ;
 	}
 	free_argv(env);
 	free(str);
 	return (0);
-	
 }
