@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:53:54 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 20:11:28 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/24 22:49:41 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	alpha_variables(t_env *env)
 	t_env	*min;
 	t_env	*max;
 
+	if (!env || (!env->next && !env->back))
+		return ;
 	while (env->back)
 		env = env->back;
 	min = get_maxmin_variable(env, MIN);

@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 20:10:51 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/22 22:16:16 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/24 23:30:28 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 void pwd_patch(t_env *env, char *var, char *pwd_s)
 {
 	t_env *temp;
+	if (!pwd_s)
+	{
+		ft_putstr_fd("error retrieving current directory: getcwd: cannot access \
+		parent directories: No such file or directory\n", 2);
+		return ;
+	}
 	while (env->back)
 		env = env->back;
 	temp = env;
@@ -57,6 +63,5 @@ int ft_cd(char *path, t_env *env)
 		write(2, "\n", 1);
 	}
 	pwd_patch(env, "PWD", getcwd(NULL, 0));
-	printf("\n%s\n\n", getcwd(NULL, 0));
 	return (0);
 }

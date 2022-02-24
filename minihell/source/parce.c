@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:12 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 20:05:18 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/24 22:38:15 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,8 @@ char	*path_cmp(char *cmd, char **paths)
 	char	*maybe_path;
 
 	i = -1;
+	if (is_built_in(cmd))
+		return (cmd);
 	tmp = ft_strjoin("/", cmd);
 	while (paths[++i])
 	{

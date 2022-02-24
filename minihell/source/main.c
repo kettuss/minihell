@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:17 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/22 22:40:06 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/24 22:59:12 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,8 @@ void	sign(int signal)
 	rl_redisplay();
 }
 
+
+
 int	main(int argc, char **argv, char **ev)
 {
 	(void)argc;
@@ -196,8 +198,8 @@ int	main(int argc, char **argv, char **ev)
 	str = NULL;
 	env = argv_dup(ev);
 	evnironment = ajaraguju(env);
-	ft_unset(evnironment, ft_split("Apple_PubSub_Socket_Render COLORTERM CPPFLAGS GIT_ASKPASS HOME HOMEBREW_CACHE HOMEBREW_TEMP LANG LDFLAGS LESS LOGNAME LSCOLORS OLDPWD ORIGINAL_XDG_CURRENT_DESKTOP PAGER PATH PWD SHELL SHLVL SSH_AUTH_SOCK TERM TERM_PROGRAM TERM_PROGRAM_VERSION TMPDIR USER VSCODE_GIT_ASKPASS_EXTRA_ARGS VSCODE_GIT_ASKPASS_MAIN VSCODE_GIT_ASKPASS_NODE VSCODE_GIT_IPC_HANDLE XPC_FLAGS XPC_SERVICE_NAME ZSH __CF_USER_TEXT_ENCODING", ' '));
-	ft_export(NULL, &evnironment);
+	// ft_unset(evnironment, ft_split("Apple_PubSub_Socket_Render COLORTERM CPPFLAGS GIT_ASKPASS HOME HOMEBREW_CACHE HOMEBREW_TEMP LANG LDFLAGS LESS LOGNAME LSCOLORS OLDPWD ORIGINAL_XDG_CURRENT_DESKTOP PAGER PATH PWD SHELL SHLVL SSH_AUTH_SOCK TERM TERM_PROGRAM TERM_PROGRAM_VERSION TMPDIR USER VSCODE_GIT_ASKPASS_EXTRA_ARGS VSCODE_GIT_ASKPASS_MAIN VSCODE_GIT_ASKPASS_NODE VSCODE_GIT_IPC_HANDLE XPC_FLAGS XPC_SERVICE_NAME ZSH __CF_USER_TEXT_ENCODING", ' '));
+	// ft_export(NULL, &evnironment);
 	// ft_cd("-", &evnironment);
 	// ft_export(NULL, &evnironment);
 	// ft_cd("~", &evnironment);
@@ -209,7 +211,7 @@ int	main(int argc, char **argv, char **ev)
 	// pipes(env);
 	// return (0);
 	g_exit = 0;
-	while (0)
+	while (1)
 	{
 		signal(SIGINT, sign);
 		signal(SIGQUIT, SIG_IGN);
@@ -234,21 +236,6 @@ int	main(int argc, char **argv, char **ev)
 			continue ;
 		// test(cmd);
 		// exit(0);
-		if (!ft_strncmp(str, "echo", 4))
-		{
-			echo(cmd->cmd + 1);
-			continue ;
-		}
-		if (!ft_strncmp(str, "pwd", 3))
-		{
-			pwd(evnironment);
-			continue ;
-		}
-		if (!ft_strncmp(str, "export", 6))
-		{
-			ft_export(cmd->cmd + 1, &evnironment);
-			continue ;
-		}
 		exec(&cmd, &evnironment);
 		cmd = NULL;
 		// break ;

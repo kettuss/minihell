@@ -10,7 +10,7 @@ int ft_unset(t_env *env, char **variable)
 		return (1);
 	while (variable[++i])
 	{
-		while (env->back)
+		while (env &&env->back)
 			env = env->back;
 		while (env)
 		{
@@ -28,8 +28,10 @@ int ft_unset(t_env *env, char **variable)
 				}
 				env->next = NULL;
 				env->back = NULL;
-				env->next_order->back_order = NULL;
-				env->back_order->next_order = NULL;
+				if (env->next_order)
+					env->next_order->back_order = NULL;
+				if (env->back_order)
+					env->back_order->next_order = NULL;
 				env->next_order = NULL;
 				env->back_order = NULL;
 				free(env->name);
@@ -43,5 +45,5 @@ int ft_unset(t_env *env, char **variable)
 			env = env->next;
 		}
 	}
-	return (1);
+	return (0);
 }

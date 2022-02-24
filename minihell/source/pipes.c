@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:09 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 20:06:32 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/24 23:22:15 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,23 @@ int	check_stdin(t_cmd *cmd)
 	return (0);
 }
 
+int exec_biultin_with_redirects(t_cmd *lst, t_env *env)
+{
+	int land;
+	int p_a[2];
+	
+	p_a[0] = dup(0);
+	p_a[1] = dup(1);
+	check_stdin(lst);
+	check_stdout(lst);
+	land = exec_built_in(lst, env);
+	dup2(p_a[0], 0);
+	close(p_a[0]);
+	dup2(p_a[1], 1);
+	close(p_a[1]);
+	return (land);
+}
+
 int	pipes(t_cmd *lst, t_env *env)
 {
 	int		p_a[2];
@@ -54,6 +71,8 @@ int	pipes(t_cmd *lst, t_env *env)
 	flag = 0;
 	while (lst->back)
 		lst = lst->back;
+	if (is_built_in(lst->cmd[0]) && !lst->back && !lst->next)
+		return (exec_biultin_with_redirects(lst, env));
 	land = land_list(lst);
 	while (lst)
 	{
@@ -120,6 +139,8 @@ int	pipes(t_cmd *lst, t_env *env)
 					close(p_a[0]);
 				}
 			}
+			if (is_built_in(lst->cmd[0]))
+				exit(exec_built_in(lst, env));
 			if (execve(lst->cmd[0], lst->cmd, env_chars(env)) == -1)
 			{
 				write(2, strerror(errno), ft_strlen(strerror(errno)));

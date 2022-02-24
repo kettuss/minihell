@@ -70,11 +70,16 @@ int	ft_get_nbr_symbols(char const *s, char c, size_t *i, size_t *nb_strs);
 size_t	ft_get_get_nbstr(char const *s, char c, size_t i, size_t nb_strs);
 int	if_equals(char **next_str, size_t **next_str_len, char c, int i);
 int	if_redirect(char **next_str, size_t **next_str_len, int i);
+int	check_stdout(t_cmd *cmd);
+int	check_stdin(t_cmd *cmd);
 
 int ft_export(char **args, t_env **ev);
 void	alpha_variables(t_env *env);
 int check_duplicate_variable(t_env *env, char **str, char *original);
 char *get_value_of_variable_from_env(t_env *env, char *variable);
+
+int is_built_in(char *cmd);
+int exec_built_in(t_cmd *cmd, t_env *env);
 
 /*
 1)cmd[0] = "/bin/cat"
