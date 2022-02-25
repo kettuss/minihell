@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:17 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/26 01:22:42 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/26 01:25:06 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,8 +156,6 @@ void	sign(int signal)
 	printf("c signal\n");
 	rl_redisplay();
 }
-
-
 
 int	main(int argc, char **argv, char **ev)
 {
