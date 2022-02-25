@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:12 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/25 23:04:35 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 23:14:35 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ void	find_path_to_cmds(t_cmd **cmd)
 		free(env_path);
 		*cmd = (*cmd)->next;
 	}
+	free_argv(paths);
 	*cmd = tmp;
 }
 

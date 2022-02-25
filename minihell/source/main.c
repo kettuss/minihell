@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:17 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/25 23:11:14 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 23:25:00 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,13 +207,13 @@ int	main(int argc, char **argv, char **ev)
 		g_exit = 0;
 		if (!cmd)
 			continue ;
-		// test(cmd);
-		// exit(0);
 		exec(&cmd, &evnironment);
-		cmd = free_cmd(&cmd);
-		// break ;
+		free_cmd(&cmd);
+		free(str);
+		str = NULL;
 	}
 	free_argv(env);
-	free(str);
+	if (str)
+		free(str);
 	return (0);
 }

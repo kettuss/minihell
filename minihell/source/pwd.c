@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:05 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 20:06:50 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 23:15:55 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,6 @@ int	pwd(t_env *env)
 	{
 		printf("%s\n", getcwd(NULL, 0));
 	}
+	free(var);
 	return (0);
 }
