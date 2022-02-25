@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:26 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/22 20:32:23 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 23:11:00 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	**env_chars(t_env *env)
 	char	**env_chars;
 	char	*temp;
 	int		i;
-
+	
 	env_chars = (char **)malloc(sizeof(char *) * (lenenv(env) + 1));
 	env_chars[lenenv(env)] = NULL;
 	i = 0;
@@ -106,13 +106,16 @@ char	*get_value(char *str)
 t_env	*lst_init_env(char *str)
 {
 	t_env	*tam;
+	char **temp;
 
 	tam = (t_env *)malloc(sizeof(t_env));
 	tam->back = NULL;
 	tam->next = NULL;
 	tam->next_order = NULL;
 	tam->back_order = NULL;
-	tam->name = *ft_split(str, '=');
+	temp = ft_split(str, '=');
+	tam->name = ft_strdup(*temp);
+	free_argv(temp);
 	tam->array = get_value(str);
 	return (tam);
 }

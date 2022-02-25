@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:12 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/24 22:38:15 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 23:04:35 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ char	*path_cmp(char *cmd, char **paths)
 
 	i = -1;
 	if (is_built_in(cmd))
-		return (cmd);
+		return (ft_strdup(cmd));
 	tmp = ft_strjoin("/", cmd);
 	while (paths[++i])
 	{
@@ -216,7 +216,13 @@ t_cmd	*parce_input(char **input, t_env *env)
 	str = -1;
 	while (input[++str])
 	{
-		if (input[str][0] == '$' && ft_strlen(input[str]) > 1)
+		if (!ft_strcmp(input[str], "$?"))
+		{
+			temp = input[str];
+			input[str] = ft_itoa(g_exit);
+			free(temp);
+		}
+		else if (input[str][0] == '$' && ft_strlen(input[str]) > 1)
 		{
 			temp = input[str];
 			input[str] = get_value_of_variable_from_env(env, input[str] + 1);

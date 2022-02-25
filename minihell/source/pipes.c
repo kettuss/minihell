@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:09 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/24 23:22:15 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 22:32:56 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,18 @@ int	land_list(t_cmd *str)
 	return (i);
 }
 
+static void	the_pids_waiting(int len)
+{
+	int	out;
+
+	while (len--)
+	{
+		waitpid(0, &out, 0);
+		if (WIFEXITED(out))
+			g_exit = WEXITSTATUS(out);
+	}
+}
+
 int	check_stdout(t_cmd *cmd)
 {
 	if (cmd->fd_out == -1)
@@ -36,7 +48,7 @@ int	check_stdout(t_cmd *cmd)
 
 int	check_stdin(t_cmd *cmd)
 {
-	if (cmd->fd_in == -1)
+	if (cmd->fd_in == -1 || cmd->fd_in == -3)
 		return (1);
 	dup2(cmd->fd_in, 0);
 	close(cmd->fd_in);
@@ -60,7 +72,7 @@ int exec_biultin_with_redirects(t_cmd *lst, t_env *env)
 	return (land);
 }
 
-int	pipes(t_cmd *lst, t_env *env)
+int	pipes(t_cmd *lst, t_env **env)
 {
 	int		p_a[2];
 	int		p_b[2];
@@ -72,7 +84,7 @@ int	pipes(t_cmd *lst, t_env *env)
 	while (lst->back)
 		lst = lst->back;
 	if (is_built_in(lst->cmd[0]) && !lst->back && !lst->next)
-		return (exec_biultin_with_redirects(lst, env));
+		return (exec_biultin_with_redirects(lst, *env));
 	land = land_list(lst);
 	while (lst)
 	{
@@ -139,9 +151,11 @@ int	pipes(t_cmd *lst, t_env *env)
 					close(p_a[0]);
 				}
 			}
+			if (lst->fd_in == -3 || lst->fd_out == -3)
+				exit(1);
 			if (is_built_in(lst->cmd[0]))
-				exit(exec_built_in(lst, env));
-			if (execve(lst->cmd[0], lst->cmd, env_chars(env)) == -1)
+				exit(exec_built_in(lst, *env));
+			if (execve(lst->cmd[0], lst->cmd, env_chars(*env)) == -1)
 			{
 				write(2, strerror(errno), ft_strlen(strerror(errno)));
 				write(2, ": ", 2);
@@ -154,7 +168,7 @@ int	pipes(t_cmd *lst, t_env *env)
 		{
 			if (lst->fd_in != -1)
 				close(lst->fd_in);
-			if (lst->fd_out != -1)
+			if (lst->fd_out != -1 && lst->fd_out != -3)
 				close(lst->fd_out);
 			if (!lst->next && !lst->back)
 				;
@@ -187,9 +201,6 @@ int	pipes(t_cmd *lst, t_env *env)
 			lst = lst->next;
 		}
 	}
-	while (land--)
-	{
-		wait(0);
-	}
-	return (0);
+	the_pids_waiting(land);
+	return (g_exit);
 }

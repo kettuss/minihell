@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:00 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 20:11:17 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 21:57:23 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	redirect_right(char *file)
 
 	fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0666);
 	if (fd == -1)
-		return (0);
+		return (1);
 	return (fd);
 }
 
@@ -38,7 +38,13 @@ int	redirect_left(char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-		return (0);
+	{
+		ft_putstr_fd(file, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd("No such file or directory\n", 2);
+		g_exit = 1;
+		return (-3);
+	}
 	return (fd);
 }
 
@@ -143,7 +149,7 @@ void	ft_redirect_register(t_cmd **cmd)
 				if ((*cmd)->fd_out != -1)
 					close((*cmd)->fd_out);
 				if ((*cmd)->fd_out)
-				(*cmd)->fd_out = redirect_right((*cmd)->redicts[i + 1]);
+					(*cmd)->fd_out = redirect_right((*cmd)->redicts[i + 1]);
 				//check yest li file
 			}
 			else if (!ft_strcmp((*cmd)->redicts[i], ">>"))
@@ -151,7 +157,7 @@ void	ft_redirect_register(t_cmd **cmd)
 				if ((*cmd)->fd_out != -1)
 					close((*cmd)->fd_out);
 				if ((*cmd)->fd_out)
-				(*cmd)->fd_out = redirect_right_append((*cmd)->redicts[i + 1]);
+					(*cmd)->fd_out = redirect_right_append((*cmd)->redicts[i + 1]);
 				//check yest li file
 			}
 			else if (!ft_strcmp((*cmd)->redicts[i], "<"))
@@ -159,7 +165,9 @@ void	ft_redirect_register(t_cmd **cmd)
 				if ((*cmd)->fd_in != -1)
 					close((*cmd)->fd_in);
 				if ((*cmd)->fd_in)
-				(*cmd)->fd_in = redirect_left((*cmd)->redicts[i + 1]);
+					(*cmd)->fd_in = redirect_left((*cmd)->redicts[i + 1]);
+				if ((*cmd)->fd_in == -3)
+					break ;
 				//check yest li file
 			}
 			else if (!ft_strcmp((*cmd)->redicts[i], "<<"))
@@ -167,7 +175,7 @@ void	ft_redirect_register(t_cmd **cmd)
 				if ((*cmd)->fd_in != -1)
 					close((*cmd)->fd_in);
 				if ((*cmd)->fd_in)
-				(*cmd)->fd_in = (*cmd)->fd_heredoc;
+					(*cmd)->fd_in = (*cmd)->fd_heredoc;
 				//check yest li file
 			}
 		}

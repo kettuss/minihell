@@ -1,49 +1,71 @@
 #include "../include/minishell.h"
 
-int ft_unset(t_env *env, char **variable)
+void	null_env(t_env **del)
 {
-	t_env *prev = NULL;
-	t_env *temp;
-	int i = -1;
+	(*del)->next = NULL;
+	(*del)->next_order = NULL;
+	(*del)->back = NULL;
+	(*del)->back_order = NULL;
+}
 
-	if (!variable)
-		return (1);
-	while (variable[++i])
+void	cut_and_free_varias(t_env **env, t_env *temp)
+{
+	t_env	*del;
+
+	del = *env;
+	*env = (*env)->next;
+	temp = del->back;
+	if (!*env && !temp)
 	{
-		while (env &&env->back)
-			env = env->back;
-		while (env)
+		free_env(&del);
+		return ;
+	}
+	if (temp)
+		temp->next = *env;
+	if (*env)
+		(*env)->back = temp;
+	else
+		*env = temp;
+	if (del->back_order)
+		del->back_order->next_order = NULL;
+	if (del->next_order)
+		del->next_order->back_order = NULL;
+	null_env(&del);
+	free_env(&del);
+}
+
+void	value_delete(t_env **env, char *value)
+{
+	t_env	*temp;
+
+	while ((*env)->back)
+		*env = (*env)->back;
+	temp = *env;
+	while (*env)
+	{
+		if (!ft_strcmp((*env)->name, value))
 		{
-			if (!ft_strcmp(env->name, variable[i]))
-			{
-				if (env->next)
-				{
-					env->next->back = prev;
-					temp = prev;
-				}
-				if (prev)
-				{
-					prev->next = env->next;
-					temp = prev;
-				}
-				env->next = NULL;
-				env->back = NULL;
-				if (env->next_order)
-					env->next_order->back_order = NULL;
-				if (env->back_order)
-					env->back_order->next_order = NULL;
-				env->next_order = NULL;
-				env->back_order = NULL;
-				free(env->name);
-				free(env->array);
-				free(env);
-				alpha_variables(temp);
-				env = temp;
-				break ;
-			}
-			prev = env;
-			env = env->next;
+			cut_and_free_varias(env, temp);
+			return ;
 		}
+		*env = (*env)->next;
+	}
+	if (!*env)
+		*env = temp;
+}
+
+int	ft_unset(t_env *env, char **variable)
+{
+	int	str;
+
+	str = 0;
+	if (variable && variable[0])
+	{
+		while (variable[str])
+			value_delete(&env, variable[str++]);
+		while (env && env->back)
+			env = env->back;
+		alpha_variables(env);
 	}
 	return (0);
 }

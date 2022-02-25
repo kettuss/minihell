@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:17 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/24 22:59:12 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 23:11:14 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,6 @@ void	lst_add(t_cmd **cmd, t_cmd *element)
 
 void	exec(t_cmd **cmd, t_env **env)
 {
-	// t_cmd *tmp;
-	// pid_t pid;
-
 	while ((*cmd)->back)
 		*cmd = (*cmd)->back;
 	while ((*env)->back)
@@ -82,32 +79,7 @@ void	exec(t_cmd **cmd, t_env **env)
 	ft_redirect_register(cmd);
 	if (g_exit == 130)
 		return ;
-	pipes(*cmd, *env);
-	return ;
-	// tmp = *cmd;
-	// if (tmp->redicts != NULL)
-	// {
-	// 	tmp->fd_out = redirect_right(tmp->redicts[1]);
-	// }
-	// pid = fork();
-	// if(!pid)
-	// {
-	// 	if (tmp->redicts != NULL)
-	// 	{
-	// 		dup2(tmp->fd_out, 1);
-	// 		close(tmp->fd_out);
-	// 	}
-	// 	if (execve(tmp->cmd[0], tmp->cmd, env) == -1)
-	// 	{
-	// 		write(2, strerror(errno), ft_strlen(strerror(errno)));
-	// 		write(2, ": ", 2);
-	// 		write(2, tmp->cmd[0], ft_strlen(tmp->cmd[0]));
-	// 		write(2, "\n", 1);
-	// 		exit(1);
-	// 	}
-	// }
-	// else 
-	// 	wait(0);
+	g_exit = pipes(*cmd, env);
 }
 
 char	*get_path_commd(char *cmd, char *path)
@@ -232,12 +204,13 @@ int	main(int argc, char **argv, char **ev)
 		if (str)
 			add_history(str);
 		cmd = parce_input(ft_split_f_shell(str, ' '), evnironment);
+		g_exit = 0;
 		if (!cmd)
 			continue ;
 		// test(cmd);
 		// exit(0);
 		exec(&cmd, &evnironment);
-		cmd = NULL;
+		cmd = free_cmd(&cmd);
 		// break ;
 	}
 	free_argv(env);

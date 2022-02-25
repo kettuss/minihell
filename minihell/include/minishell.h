@@ -39,7 +39,7 @@ typedef struct s_env
 	struct s_env *back_order;
 }t_env;
 
-int pipes(t_cmd *lst, t_env *env);
+int	pipes(t_cmd *lst, t_env **env);
 t_cmd *parce_input(char **input, t_env *env);
 char	**ft_split_f_shell(char const *s, char c);
 int lentab(char **ms);
@@ -63,7 +63,9 @@ char *get_env(t_env *cmd, char *variable);
 char **env_chars(t_env *env);
 int pwd(t_env *env);
 int ft_cd(char *path, t_env *env);
-int ft_unset(t_env *env, char **variable);
+int	ft_unset(t_env *env, char **variable);
+void	free_env(t_env **env);
+t_cmd *free_cmd(t_cmd **cmd);
 
 int	ft_get_nbr_symbols2(char const *s, char c, size_t *i, size_t *nb_strs);
 int	ft_get_nbr_symbols(char const *s, char c, size_t *i, size_t *nb_strs);
@@ -80,6 +82,7 @@ char *get_value_of_variable_from_env(t_env *env, char *variable);
 
 int is_built_in(char *cmd);
 int exec_built_in(t_cmd *cmd, t_env *env);
+int	ft_exit(char **code);
 
 /*
 1)cmd[0] = "/bin/cat"

@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:23 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/22 20:42:34 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 21:35:54 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int ft_export(char **args, t_env **ev)
 {
 	t_env *env;
 	int i = -1;
-	while ((*ev)->back_order)
+	while (*ev && (*ev)->back_order)
 		*ev = (*ev)->back_order;
 	env = *ev;
 	if (!args || !*args)

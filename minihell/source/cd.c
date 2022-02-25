@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 20:10:51 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/24 23:30:28 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/25 20:55:37 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int ft_cd(char *path, t_env *env)
 		write(2, ": ", 2);
 		write(2, path, ft_strlen(path));
 		write(2, "\n", 1);
+		return (1);
 	}
 	pwd_patch(env, "PWD", getcwd(NULL, 0));
 	return (0);
