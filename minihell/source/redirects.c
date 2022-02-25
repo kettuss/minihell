@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:00 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/25 21:57:23 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/26 00:24:09 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	ft_check_heredoc(t_cmd **cmd)
 	temp = *cmd;
 	while (*cmd)
 	{
-		while ((*cmd)->redicts[++i])
+		while ((*cmd)->redicts && (*cmd)->redicts[++i])
 		{
 			if (!ft_strcmp((*cmd)->redicts[i], "<<"))
 			{
@@ -141,7 +141,7 @@ void	ft_redirect_register(t_cmd **cmd)
 	while (*cmd)
 	{
 		i = -1;
-		while ((*cmd)->redicts[++i])
+		while ((*cmd)->redicts && (*cmd)->redicts[++i])
 		{
 			if (!ft_strcmp((*cmd)->redicts[i], ">"))
 			{

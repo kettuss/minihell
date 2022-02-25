@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 20:49:02 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/25 20:54:54 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/26 00:53:51 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	ft_exit_util(char **code)
 	if (is_numbers_to_string(*code))
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);
-		return (-1);
+		return (1);
 	}
 	else
 	{

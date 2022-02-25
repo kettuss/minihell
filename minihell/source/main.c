@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:17 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/25 23:25:00 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/26 01:22:42 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	test(t_cmd *cmd)
 			printf("%s\n", cmd->cmd[i]);
 		}
 		i = -1;
-		while (cmd->redicts[++i])
+		while (cmd->redicts && cmd->redicts[++i])
 			printf("       %s\n", cmd->redicts[i]);
 		cmd = cmd->next;
 		printf("{}{}{}{}{}{}{}{}\n");
@@ -133,12 +133,14 @@ void	ctrl_wd(int signum)
 void	cmd_c_sl(int signum)
 {
 	(void)signum;
+	g_exit = 131;
 	printf("Quit :3\n");
 }
 
 void	cmd_c_fork(int signum)
 {
 	(void)signum;
+	g_exit = 130;
 	write(1, "\n", 1);
 }
 
@@ -196,6 +198,7 @@ int	main(int argc, char **argv, char **ev)
 		// str = ft_strdup("$a | wc -l");
 		if (!str || !ft_strncmp(str, "exit", 5))
 		{	
+			break;
 			write(1, "exit\n", 5);
 			exit(0);
 		}
@@ -204,6 +207,8 @@ int	main(int argc, char **argv, char **ev)
 		if (str)
 			add_history(str);
 		cmd = parce_input(ft_split_f_shell(str, ' '), evnironment);
+		// test(cmd);
+		// continue;
 		g_exit = 0;
 		if (!cmd)
 			continue ;
@@ -213,6 +218,8 @@ int	main(int argc, char **argv, char **ev)
 		str = NULL;
 	}
 	free_argv(env);
+	free_env(&evnironment);
+	evnironment = NULL;
 	if (str)
 		free(str);
 	return (0);

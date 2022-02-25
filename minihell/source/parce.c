@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:12 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/25 23:14:35 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/26 01:09:04 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ char	**record_redicts(char **argv)
 
 	str = 0;
 	i = 0;
+	if (redirect_count(argv) == 0)
+		return (NULL);
 	temp = (char **)malloc((redirect_count(argv) + 1) * sizeof(char *));
 	while (argv[str])
 	{
@@ -131,7 +133,10 @@ void	cmd_run(t_cmd **cmd)
 		}
 		(*cmd)->redicts = record_redicts(ar);
 		if (!(*cmd)->redicts)
-			break ;
+		{
+			*cmd = (*cmd)->next;
+			continue ;
+		}
 		(*cmd)->cmd = rewrite_cmd(ar);
 		free_argv(ar);
 		*cmd = (*cmd)->next;
@@ -146,6 +151,8 @@ char	*path_cmp(char *cmd, char **paths)
 	char	*maybe_path;
 
 	i = -1;
+	if (!cmd)
+		return (NULL);
 	if (is_built_in(cmd))
 		return (ft_strdup(cmd));
 	tmp = ft_strjoin("/", cmd);
@@ -162,16 +169,17 @@ char	*path_cmp(char *cmd, char **paths)
 	return (ft_strdup(cmd));
 }
 
-void	find_path_to_cmds(t_cmd **cmd)
+void	find_path_to_cmds(t_cmd **cmd, t_env *env)
 {
 	t_cmd	*tmp;
 	char	**paths;
 	char	*env_path;
 
-	env_path = getenv("PATH=");
+	env_path = get_env(env, "PATH");
 	if (!env_path)
 		return ;
-	paths = ft_split(env_path + 5, ':');
+	paths = ft_split(env_path, ':');
+	free(env_path);
 	while ((*cmd)->back)
 		*cmd = (*cmd)->back;
 	tmp = *cmd;
@@ -261,6 +269,6 @@ t_cmd	*parce_input(char **input, t_env *env)
 		}
 	}
 	cmd_run(&cmd);
-	find_path_to_cmds(&cmd);
+	find_path_to_cmds(&cmd, env);
 	return (cmd);
 }

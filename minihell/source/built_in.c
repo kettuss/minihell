@@ -2,6 +2,8 @@
 
 int is_built_in(char *cmd)
 {
+	if (!cmd || !*cmd)
+		return (0);
 	if(!ft_strcmp(cmd, "cd") \
 	|| !ft_strcmp(cmd, "env") \
 	|| !ft_strcmp(cmd, "export") 

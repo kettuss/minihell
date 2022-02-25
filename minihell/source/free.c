@@ -28,7 +28,6 @@ t_cmd *free_cmd(t_cmd **cmd)
 		*cmd = (*cmd)->next;
 		free_argv(temp->cmd);
 		free_argv(temp->redicts);
-		free(temp->redicts);
 		free(temp);
 	}	
 	return (NULL);
