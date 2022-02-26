@@ -1,6 +1,11 @@
 NAME		=	minishell
 
-SRCS_FILES	= 	${shell find ./source -name "*.c"}
+SRCS_FILES	= 	source/built_in.c source/cd.c source/echo.c source/env_operation.c \
+				source/exit.c source/export.c source/free.c source/init_add_env.c \
+				source/main.c source/parce.c source/parce_utils.c source/path_cmp.c source/pipes.c \
+				source/pipes_process.c source/pipes_utils.c source/pwd.c source/redirect_utils.c \
+				source/redirects.c source/redirects_utils_two.c source/signals.c source/sorting_export.c \
+				source/split_for_shell.c source/split_for_shell2.c source/unset.c source/utils.c
 
 SRCS_FOLDER	=	source/
 
