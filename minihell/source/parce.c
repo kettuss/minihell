@@ -6,168 +6,11 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 19:54:12 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/26 01:09:04 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/27 00:33:45 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	unsigned int	i;
-
-	i = 0;
-	if (!s1[i] && !s2[i])
-		return (0);
-	while ((s1[i] || s2[i]))
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char) s1[i] - (unsigned char) s2[i]);
-		i++;
-	}
-	return (0);
-}
-
-void free_argv(char **good_bye)
-{
-	int i;
-
-	i = -1;
-	if (!good_bye || !*good_bye)
-		return ;
-	while (good_bye[++i])
-		free(good_bye[i]);
-	free(good_bye);
-}
-
-int	redirect_count(char **argv)
-{
-	int	count;
-	int	i;
-
-	count = 0;
-	i = -1;
-	while (argv[++i])
-		if (!ft_strcmp(argv[i], ">>") || \
-		!ft_strcmp(argv[i], ">") || \
-		!ft_strcmp(argv[i], "<") || \
-		!ft_strcmp(argv[i], "<<"))
-			count++;
-	return (count * 2);
-}
-
-char	**record_redicts(char **argv)
-{
-	int		str;
-	int		i;
-	char	**temp;
-
-	str = 0;
-	i = 0;
-	if (redirect_count(argv) == 0)
-		return (NULL);
-	temp = (char **)malloc((redirect_count(argv) + 1) * sizeof(char *));
-	while (argv[str])
-	{
-		if (!ft_strcmp(argv[str], ">>") || \
-		!ft_strcmp(argv[str], ">") || \
-		!ft_strcmp(argv[str], "<") || \
-		!ft_strcmp(argv[str], "<<"))
-		{
-			temp[i] = ft_strdup(argv[str]);
-			temp[i + 1] = ft_strdup(argv[str + 1]);
-			i += 2;
-			str += 2;
-			continue ;
-		}
-		str++;
-	}
-	temp[i] = NULL;
-	return (temp);
-}
-
-char	**rewrite_cmd(char **argv)
-{
-	int		i;
-	int		str;
-	char	**temp;
-
-	i = 0;
-	str = 0;
-	temp = (char **)malloc(((lentab(argv) - redirect_count(argv)) + 1) * \
-	sizeof(char *));
-	while (argv[i])
-	{
-		if (!ft_strcmp(argv[i], ">>") || \
-		!ft_strcmp(argv[i], ">") || \
-		!ft_strcmp(argv[i], "<") || \
-		!ft_strcmp(argv[i], "<<"))
-		{
-			i += 2;
-			continue ;
-		}
-		temp[str] = ft_strdup(argv[i]);
-		str++;
-		i++;
-	}
-	temp[str] = NULL;
-	return (temp);
-}
-
-
-void	cmd_run(t_cmd **cmd)
-{
-	t_cmd		*temp;
-	char		**ar;
-
-	while ((*cmd)->back)
-		*cmd = (*cmd)->back;
-	temp = *cmd;
-	while (*cmd)
-	{
-		ar = (*cmd)->cmd;
-		if (!ar || !*ar)
-		{
-			*cmd = (*cmd)->next;
-			continue ;
-		}
-		(*cmd)->redicts = record_redicts(ar);
-		if (!(*cmd)->redicts)
-		{
-			*cmd = (*cmd)->next;
-			continue ;
-		}
-		(*cmd)->cmd = rewrite_cmd(ar);
-		free_argv(ar);
-		*cmd = (*cmd)->next;
-	}
-	*cmd = temp;
-}
-
-char	*path_cmp(char *cmd, char **paths)
-{
-	int		i;
-	char	*tmp;
-	char	*maybe_path;
-
-	i = -1;
-	if (!cmd)
-		return (NULL);
-	if (is_built_in(cmd))
-		return (ft_strdup(cmd));
-	tmp = ft_strjoin("/", cmd);
-	while (paths[++i])
-	{
-		maybe_path = ft_strjoin(paths[i], tmp);
-		if (!access(maybe_path, F_OK))
-		{
-			free(tmp);
-			return (maybe_path);
-		}
-		free(maybe_path);
-	}
-	return (ft_strdup(cmd));
-}
 
 void	find_path_to_cmds(t_cmd **cmd, t_env *env)
 {
@@ -214,26 +57,21 @@ char	**argv_dup_without_position(char **str, int indx)
 	return (new_arg);
 }
 
-t_cmd	*parce_input(char **input, t_env *env)
+char	**parce_bucks(char **input, char *temp, char **temp_mass, t_env *env)
 {
-	t_cmd *cmd = NULL;
-	int i;
-	int str;
-	char *temp;
-	char **temp_mass;
+	int	str;
 
 	str = -1;
 	while (input[++str])
 	{
+		temp = input[str];
 		if (!ft_strcmp(input[str], "$?"))
 		{
-			temp = input[str];
 			input[str] = ft_itoa(g_exit);
 			free(temp);
 		}
 		else if (input[str][0] == '$' && ft_strlen(input[str]) > 1)
 		{
-			temp = input[str];
 			input[str] = get_value_of_variable_from_env(env, input[str] + 1);
 			if (!input[str])
 			{
@@ -245,9 +83,14 @@ t_cmd	*parce_input(char **input, t_env *env)
 				free(temp);
 		}
 	}
-	i = lentab(input);
-	if (!i)
-		return (cmd);
+	return (input);
+}
+
+t_cmd	*cmd_record_from_mass(char **input, int i)
+{
+	t_cmd	*cmd;
+
+	cmd = NULL;
 	while (input[--i])
 	{
 		if (!ft_strcmp("|", input[i]))
@@ -259,7 +102,7 @@ t_cmd	*parce_input(char **input, t_env *env)
 			free(input[i]);
 			input[i] = NULL;
 		}
-		else if (i == 0)
+		if (i == 0)
 		{
 			lst_add(&cmd, lst_init(input));
 			while (input[i])
@@ -268,6 +111,24 @@ t_cmd	*parce_input(char **input, t_env *env)
 			break ;
 		}
 	}
+	return (cmd);
+}
+
+t_cmd	*parce_input(char **input, t_env *env)
+{
+	int		i;
+	char	*temp;
+	char	**temp_mass;
+	t_cmd	*cmd;
+
+	cmd = NULL;
+	temp = NULL;
+	temp_mass = NULL;
+	input = parce_bucks(input, temp, temp_mass, env);
+	i = lentab(input);
+	if (!i)
+		return (NULL);
+	cmd_record_from_mass(input, i);
 	cmd_run(&cmd);
 	find_path_to_cmds(&cmd, env);
 	return (cmd);

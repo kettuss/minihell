@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/26 19:13:06 by kpeanuts          #+#    #+#             */
+/*   Updated: 2022/02/26 19:13:25 by kpeanuts         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 void	free_env(t_env **env)
@@ -16,13 +28,13 @@ void	free_env(t_env **env)
 	}
 }
 
-t_cmd *free_cmd(t_cmd **cmd)
+t_cmd	*free_cmd(t_cmd **cmd)
 {
-	t_cmd *temp;
+	t_cmd	*temp;
 
-	while(*cmd && (*cmd)->back)
+	while (*cmd && (*cmd)->back)
 		*cmd = (*cmd)->back;
-	while(*cmd)
+	while (*cmd)
 	{
 		temp = *cmd;
 		*cmd = (*cmd)->next;

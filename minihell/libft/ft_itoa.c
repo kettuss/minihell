@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/27 00:36:12 by kpeanuts          #+#    #+#             */
+/*   Updated: 2022/02/27 00:37:42 by kpeanuts         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
 static int	ft_prnbr(long int nb)
@@ -26,7 +38,7 @@ char	*ft_itoa(int n)
 
 	n_ = n;
 	nel = ft_prnbr(n);
-	str = (char *)malloc(sizeof(char)*(nel + 1));
+	str = (char *)malloc(sizeof(char) * (nel + 1));
 	if (!str)
 		return (NULL);
 	if (n_ < 0)

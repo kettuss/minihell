@@ -6,7 +6,7 @@
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 14:29:05 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/21 19:53:44 by kpeanuts         ###   ########.fr       */
+/*   Updated: 2022/02/26 23:30:01 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,8 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 	return (ft_get_get_nbstr(s, c, i, nb_strs));
 }
 
-int	if_quotes(char **next_str, size_t **next_str_len, char c, int i)
+int	if_quotes(char **next_str, size_t **next_str_len, int i)
 {
-	(void)c;
 	if ((*next_str)[i] == '\"')
 	{
 		i++;
@@ -86,7 +85,7 @@ static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 	{
 		if ((*next_str)[i] == c)
 			return ;
-		if (if_quotes(next_str, &next_str_len, c, i) == 2
+		if (if_quotes(next_str, &next_str_len, i) == 2
 			|| if_redirect(next_str, &next_str_len, i) == 2
 			|| if_equals(next_str, &next_str_len, c, i) == 2)
 			return ;
@@ -101,10 +100,10 @@ static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 
 char	**ft_split_f_shell(char const *s, char c)
 {
-	size_t	nb_strs;
-	size_t	len;
-	char	**buf;
-	char	*next_str;
+	size_t		nb_strs;
+	size_t		len;
+	char		**buf;
+	char		*next_str;
 	size_t		i;
 
 	if (!s)
