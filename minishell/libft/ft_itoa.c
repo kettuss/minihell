@@ -1,49 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kpeanuts <kpeanuts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/26 23:14:12 by kpeanuts          #+#    #+#             */
-/*   Updated: 2022/02/27 18:46:47 by kpeanuts         ###   ########.fr       */
+/*   Created: 2022/02/27 00:36:12 by kpeanuts          #+#    #+#             */
+/*   Updated: 2022/02/27 00:37:42 by kpeanuts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_chkout(char c, const char *st)
+static int	ft_prnbr(long int nb)
 {
-	while (*st)
+	int	len;
+
+	len = 0;
+	if (nb <= 0)
 	{
-		if (c == *st)
-			return (1);
-		st++;
+		len++;
+		nb = -nb;
 	}
-	return (0);
+	while (nb > 0)
+	{
+		len++;
+		nb = nb / 10;
+	}
+	return (len);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+char	*ft_itoa(int n)
 {
-	char	*str;
-	size_t	l;
-	size_t	u;
-	size_t	z;
+	char		*str;
+	int			nel;
+	long int	n_;
 
-	l = 0;
-	if (!s1 || !set)
-		return (NULL);
-	while (s1[l] && ft_chkout(s1[l], set))
-		l++;
-	z = ft_strlen(s1);
-	while (z > l && ft_chkout(s1[z - 1], set))
-		z--;
-	str = (char *)malloc(sizeof(*s1) * (z - l + 1));
+	n_ = n;
+	nel = ft_prnbr(n);
+	str = (char *)malloc(sizeof(char) * (nel + 1));
 	if (!str)
 		return (NULL);
-	u = 0;
-	while (l < z)
-		str[u++] = s1[l++];
-	str[u] = 0;
+	if (n_ < 0)
+	{
+		str[0] = '-';
+		n_ = -n_;
+	}
+	else if (n_ == 0)
+		str[0] = 0 + '0';
+	str[nel] = '\0';
+	while (n_ > 0)
+	{
+		nel--;
+		str[nel] = (n_ % 10) + '0';
+		n_ = n_ / 10;
+	}
 	return (str);
 }
